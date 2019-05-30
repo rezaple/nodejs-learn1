@@ -8,7 +8,11 @@ app.get('/', function (req, res) {
 
 app.get('/test', function (req, res) {
     res.send('hello test')
-  })
+})
+
+app.get('/bee', function (req, res) {
+    res.send('hello bee')
+})
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT)
