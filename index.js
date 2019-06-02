@@ -1,18 +1,26 @@
 const express = require('express')
+const mongoose= require('mongoose')
+const cookieSession = require('cookie-session');
+const passport = require('passport');
+const keys = require('./config/keys')
+require('./models/User')
+require('./services/passport')
+
+mongoose.connect(keys.mongoURI,{ useNewUrlParser: true })
+
 const app = express()
 
-// respond with "hello world" when a GET request is made to the homepage
-app.get('/', function (req, res) {
-  res.send('hello world')
-})
+app.use(
+    cookieSession({
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        keys: [keys.cookieKey]
+    })
+)
 
-app.get('/test', function (req, res) {
-    res.send('hello test')
-})
+app.use(passport.initialize())
+app.use(passport.session())
 
-app.get('/bee', function (req, res) {
-    res.send('hello bee')
-})
+require('./routes/authRoutes')(app)
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT)
+app.listen(PORT) 
